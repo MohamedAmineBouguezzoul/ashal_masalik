@@ -1,89 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حفظ أسهل المسالك (72-103)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="container">
-    <header>
-        <h1>حفظ أسهل المسالك في مذهب الإمام مالك</h1>
-        <h2>للشيخ: محمد البشار الرشيدي</h2>
-        <p>من البيت 73 إلى 260</p>
-        
-        <div class="stats-container">
-            <div class="stats-info">
-                <span>الإنجاز: <strong id="saved-count">0</strong> من <strong id="total-count">0</strong></span>
-                <strong id="percent-display" style="color: var(--accent-color);">0%</strong>
-            </div>
-            <div class="progress-bar-bg">
-                <div id="progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
-            </div>
-        </div>
-        <div class="controls">
-    <button onclick="toggleTheme()">🌙</button>
-    <button class="secondary" onclick="hideAllVerses()">🌑 إخفاء كامل</button>
-    
-    <button class="secondary" onclick="hideAllAjuz()">🌓 إخفاء العجز</button>
-    <button class="secondary" onclick="showAll()">🌕 إظهار الكل</button>
-    <button class="focus-btn" onclick="openFocusMode()">🎯 وضع التركيز</button>
-    <button class="secondary" onclick="resetProgress()" style="color: #ffffff;">🗑️ تصفير</button>
-</div>
-    </header>
-
-    <div id="verses-area">
-        </div>
-</div>
-
-<div id="focus-overlay">
-    <button class="close-focus" onclick="closeFocusMode()" title="خروج">✕</button>
-    <div class="focus-card">
-        <div class="focus-id-badge" id="focus-id">00</div>
-        <div class="focus-section-title" id="focus-section">...</div>
-        
-        <div class="focus-verse-text">
-            <div class="shatr" id="focus-s1" onclick="toggleFocusShatr(this)">...</div>
-            <div class="shatr hidden" id="focus-s2" onclick="toggleFocusShatr(this)">...</div>
-        </div>
-
-        <div id="focus-counter-area"></div>
-
-        <div style="margin-top: 20px;">
-            <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <input type="checkbox" id="focus-check" onchange="toggleDoneFromFocus()">
-                <span>تم الحفظ</span>
-            </label>
-        </div>
-
-        <div class="focus-controls">
-            <button class="nav-btn" onclick="prevVerse()">➜ السابق</button>
-            <button class="nav-btn" onclick="nextVerse()">التالي ⬅</button>
-        </div>
-        <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.6;">(يمكنك استخدام السهم الأعلى لزيادة العداد والأسفل لنقصه، اليمين واليسار للتنقل بين الأبيات و المسافة لكشف العجز وEnter لتسجيل الحفظ)</p>
-    </div>
-</div>
-
-<script src="data.js"></script>
-<script src="script.js"></script>
-
-</body>
-<footer class="dua-footer">
-    <div class="dua-content">
-        <span class="ornament">﴿</span>
-        <p>رَبِّ زِدْنِي عِلْمًا وَأَلْحِقْنِي بِالصَّالِحِينَ</p>
-        <span class="ornament">﴾</span>
-    </div>
-
-    <div class="author-request">
-        <p class="waqf-text">هذا العمل وقفٌ لوجه الله تعالى</p>
-        <p>إخواني الكرام، إذا انتفعتم بهذا الجهد فلا تنسوا أخاكم وأهله ووالديه من صالح دعائكم بظهر الغيب.</p>
-    </div>
-</footer>
-</html>

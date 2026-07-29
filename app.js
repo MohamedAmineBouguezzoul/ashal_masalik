@@ -107,11 +107,28 @@ function setupNavigation() {
     // Mobile sidebar toggle
     const menuToggle = document.getElementById("menu-toggle-mobile");
     const sidebar = document.querySelector(".sidebar");
+    const sidebarOverlay = document.getElementById("sidebar-mobile-overlay");
+    
+    const closeSidebar = () => {
+        if (sidebar) sidebar.classList.remove("active-mobile");
+        if (sidebarOverlay) sidebarOverlay.classList.remove("active");
+    };
+
     if (menuToggle) {
         menuToggle.addEventListener("click", () => {
-            sidebar.classList.toggle("active-mobile");
+            if (sidebar) sidebar.classList.toggle("active-mobile");
+            if (sidebarOverlay) sidebarOverlay.classList.toggle("active");
         });
     }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener("click", closeSidebar);
+    }
+
+    // Also close sidebar on menu item clicks on mobile/tablet
+    document.querySelectorAll(".menu-btn").forEach(btn => {
+        btn.addEventListener("click", closeSidebar);
+    });
 }
 
 function switchView(targetViewId) {

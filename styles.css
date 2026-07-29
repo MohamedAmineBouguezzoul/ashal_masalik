@@ -1627,44 +1627,95 @@ body.light-theme .bg-glow {
 }
 
 /* Responsive adjustments */
+/* Mobile Sidebar Overlay Backdrop */
+.sidebar-mobile-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+.sidebar-mobile-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Responsive adjustments */
 @media (max-width: 1024px) {
     .app-container {
         flex-direction: column;
     }
 
     .sidebar {
-        width: 100vw;
-        border-left: none;
-        border-bottom: 1px solid var(--border-color);
-        padding: 15px 20px;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
+        position: fixed;
+        top: 0;
+        right: 0; /* Align to the right in RTL */
+        height: 100vh;
+        width: 280px;
+        transform: translateX(100%); /* Hide to the right */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1000;
+        background-color: var(--bg-sidebar);
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4);
+        border-left: 1px solid var(--border-color);
+        border-right: none;
+        border-bottom: none;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sidebar.active-mobile {
+        transform: translateX(0); /* Slide in */
     }
 
     .sidebar-header {
-        margin-bottom: 0;
+        margin-bottom: 30px;
     }
 
     .sidebar-menu {
-        flex-direction: row;
-        flex-grow: 0;
-        gap: 4px;
+        flex-direction: column;
+        flex-grow: 1;
+        gap: 8px;
     }
 
     .menu-btn {
-        padding: 8px 12px;
-        font-size: 13px;
+        padding: 12px 16px;
+        font-size: 14px;
     }
 
     .sidebar-footer {
-        display: none;
+        display: block; /* Show footer! */
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .mobile-only-btn {
+        display: block;
+        background: transparent;
+        border: none;
+        color: var(--text-primary);
+        font-size: 22px;
+        cursor: pointer;
+        padding: 8px;
+        transition: var(--transition);
+    }
+    
+    .mobile-only-btn:hover {
+        color: var(--primary);
     }
 
     .main-content {
         padding: 20px;
         max-height: none;
-        overflow-y: visible;
+        overflow-y: auto; /* Allow scrolling */
+        height: 100vh;
     }
 
     .stats-grid {
@@ -1681,29 +1732,15 @@ body.light-theme .bg-glow {
     }
 
     .chapters-sidebar {
-        height: 250px;
+        height: 200px;
     }
 
     .poem-display-area {
-        height: 600px;
+        height: 500px;
     }
 }
 
 @media (max-width: 768px) {
-    .sidebar-menu {
-        display: none;
-        /* In production mobile drawer can toggle this */
-    }
-
-    .mobile-only-btn {
-        display: block;
-        background: transparent;
-        border: none;
-        color: var(--text-primary);
-        font-size: 20px;
-        cursor: pointer;
-    }
-
     .app-header {
         justify-content: flex-start;
     }
@@ -1734,6 +1771,51 @@ body.light-theme .bg-glow {
 
     .setup-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .app-header {
+        flex-wrap: wrap;
+        justify-content: space-between !important;
+        gap: 12px;
+    }
+    
+    .mobile-only-btn {
+        order: 1;
+    }
+    
+    .user-status-pill {
+        order: 2;
+    }
+    
+    .header-search {
+        order: 3;
+        width: 100%;
+        max-width: none;
+        flex-grow: 1;
+    }
+    
+    .browser-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .toolbar-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .explanations-drawer {
+        width: 100% !important;
+        left: -100% !important;
+    }
+    .explanations-drawer.active {
+        left: 0 !important;
     }
 }
 

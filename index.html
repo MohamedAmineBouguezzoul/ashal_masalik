@@ -380,6 +380,10 @@
     <aside class="explanations-drawer" id="explanations-drawer">
         <div class="drawer-header">
             <h3>تفاصيل البيت والتعليق</h3>
+            <div class="drawer-nav-buttons" style="display: flex; gap: 8px; margin-inline-start: auto; margin-inline-end: 15px;">
+                <button id="drawer-prev-btn" class="circle-btn" title="البيت السابق"><i class="fa-solid fa-chevron-right"></i></button>
+                <button id="drawer-next-btn" class="circle-btn" title="البيت التالي"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
             <button id="close-drawer-btn" class="circle-btn"><i class="fa-solid fa-xmark"></i></button>
         </div>
         <div class="drawer-body">
@@ -422,6 +426,15 @@
                 <div class="mnemonic-box" id="drawer-mnemonic-text">
                     <!-- Automatically generated mnemonic hint -->
                 </div>
+            </div>
+
+            <!-- Keyboard Shortcuts Hint -->
+            <div class="drawer-shortcuts-hint" style="margin-top: 10px; padding: 12px; background-color: var(--bg-input); border: 1px dashed var(--border-color); border-radius: var(--radius-md); font-size: 12px; color: var(--text-secondary); text-align: center;">
+                <i class="fa-solid fa-keyboard" style="margin-left: 6px; color: var(--primary);"></i>
+                اختصارات لوحة المفاتيح:
+                <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">➡️</span> / <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">⬅️</span> للتنقل | 
+                <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">1</span>، <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">2</span>، <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">3</span> لتغيير حالة الحفظ | 
+                <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">Esc</span> للإغلاق
             </div>
         </div>
     </aside>

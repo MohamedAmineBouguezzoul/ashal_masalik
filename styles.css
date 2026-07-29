@@ -862,6 +862,18 @@ body.light-theme .bg-glow {
     padding: 4px 8px;
     border-radius: 12px;
     font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+.status-badge:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+
+.status-badge:active {
+    transform: scale(0.95);
 }
 
 .status-0 {

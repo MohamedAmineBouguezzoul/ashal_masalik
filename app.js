@@ -3,6 +3,7 @@ let poemData = null;
 let currentChapterIdx = 0;
 let currentFocusVerseIdx = 0;
 let focusIntervalId = null;
+let currentDrawerVerseNum = null;
 
 // Progress State: maps verseNumber (1-based) to status: 0 (not started), 1 (partial), 2 (memorized)
 let userProgress = {};
@@ -615,6 +616,22 @@ function renderCurrentChapterVerses() {
             <div class="${statusBadgeClass}">${statusBadgeText}</div>
         `;
 
+        const badge = item.querySelector(".status-badge");
+        badge.addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent opening the explanations drawer
+            const currentStatus = userProgress[v.number] || 0;
+            const nextStatus = (currentStatus + 1) % 3;
+
+            userProgress[v.number] = nextStatus;
+            saveProgress();
+            updateSRSStateForVerse(v.number, nextStatus);
+
+            badge.className = `status-badge status-${nextStatus}`;
+            badge.innerText = nextStatus === 2 ? "محفوظ" : nextStatus === 1 ? "قيد الحفظ" : "غير محفوظ";
+
+            initDashboard(); // Update stats
+        });
+
         item.addEventListener("click", (e) => {
             // Click to reveal masked text or open drawer
             if (e.target.classList.contains("text-masked") || e.target.classList.contains("word-masked")) {
@@ -643,6 +660,36 @@ function getNextVerse(currentVerseNumber) {
             }
             if (v.number === currentVerseNumber) {
                 foundCurrent = true;
+            }
+        }
+    }
+    return null;
+}
+
+function getPrevVerse(currentVerseNumber) {
+    if (!poemData) return null;
+    let prevVerse = null;
+    for (let i = 0; i < poemData.chapters.length; i++) {
+        const ch = poemData.chapters[i];
+        for (let j = 0; j < ch.verses.length; j++) {
+            const v = ch.verses[j];
+            if (v.number === currentVerseNumber) {
+                return prevVerse;
+            }
+            prevVerse = v;
+        }
+    }
+    return null;
+}
+
+function getVerseByNumber(verseNumber) {
+    if (!poemData) return null;
+    for (let i = 0; i < poemData.chapters.length; i++) {
+        const ch = poemData.chapters[i];
+        for (let j = 0; j < ch.verses.length; j++) {
+            const v = ch.verses[j];
+            if (v.number === verseNumber) {
+                return v;
             }
         }
     }
@@ -693,9 +740,31 @@ function findSimilarVerses(currentVerse) {
 
 // Side Drawer Expanations Panel
 function openExplanationsDrawer(verse) {
+    currentDrawerVerseNum = verse.number;
+
     document.getElementById("drawer-verse-num").innerText = `البيت ${verse.number}`;
     document.getElementById("drawer-verse-sadr").innerText = verse.sadr;
     document.getElementById("drawer-verse-ajuz").innerText = verse.ajuz;
+
+    // Nav Buttons setup
+    const prevVerse = getPrevVerse(verse.number);
+    const nextVerse = getNextVerse(verse.number);
+    const prevBtn = document.getElementById("drawer-prev-btn");
+    const nextBtn = document.getElementById("drawer-next-btn");
+
+    if (prevVerse) {
+        prevBtn.disabled = false;
+        prevBtn.onclick = () => openExplanationsDrawer(prevVerse);
+    } else {
+        prevBtn.disabled = true;
+    }
+
+    if (nextVerse) {
+        nextBtn.disabled = false;
+        nextBtn.onclick = () => openExplanationsDrawer(nextVerse);
+    } else {
+        nextBtn.disabled = true;
+    }
 
     // Status Buttons setup
     const currentStatus = userProgress[verse.number] || 0;
@@ -714,8 +783,15 @@ function openExplanationsDrawer(verse) {
             document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
 
-            // Re-render browser row badge
-            renderCurrentChapterVerses();
+            // Update browser row badge in-place to keep search/scroll state
+            const row = document.querySelector(`.verse-item[data-verse-num="${verse.number}"]`);
+            if (row) {
+                const badge = row.querySelector(".status-badge");
+                if (badge) {
+                    badge.className = `status-badge status-${status}`;
+                    badge.innerText = status === 2 ? "محفوظ" : status === 1 ? "قيد الحفظ" : "غير محفوظ";
+                }
+            }
             initDashboard(); // Update dashboard
         };
     });
@@ -739,7 +815,6 @@ function openExplanationsDrawer(verse) {
 
     // Mnemonics Generation: provide helper rhymes and structural clues
     const mnemonicBox = document.getElementById("drawer-mnemonic-text");
-    const nextVerse = getNextVerse(verse.number);
     const similarVerses = findSimilarVerses(verse);
 
     const lastWordAjuz = getLastWord(verse.ajuz);
@@ -809,7 +884,78 @@ function openExplanationsDrawer(verse) {
 function closeDrawer() {
     document.getElementById("explanations-drawer").classList.remove("active");
     document.getElementById("explanations-drawer-overlay").classList.remove("active");
+    currentDrawerVerseNum = null;
 }
+
+// Global Keyboard Shortcuts for Drawer Navigation & Status Cycling
+window.addEventListener("keydown", (e) => {
+    // If explanations drawer is not active, do nothing
+    const drawer = document.getElementById("explanations-drawer");
+    if (!drawer || !drawer.classList.contains("active")) {
+        return;
+    }
+
+    // Ignore keyboard shortcuts if the user is typing in an input field or textarea
+    const activeEl = document.activeElement;
+    if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.isContentEditable)) {
+        return;
+    }
+
+    if (e.key === "Escape") {
+        closeDrawer();
+        e.preventDefault();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowDown" || e.key.toLowerCase() === "n") {
+        // Next Verse (Arabic is RTL so ArrowLeft or ArrowDown is Next)
+        if (currentDrawerVerseNum) {
+            const nextVerse = getNextVerse(currentDrawerVerseNum);
+            if (nextVerse) {
+                openExplanationsDrawer(nextVerse);
+                e.preventDefault();
+            }
+        }
+    } else if (e.key === "ArrowRight" || e.key === "ArrowUp" || e.key.toLowerCase() === "p") {
+        // Previous Verse (Arabic is RTL so ArrowRight or ArrowUp is Prev)
+        if (currentDrawerVerseNum) {
+            const prevVerse = getPrevVerse(currentDrawerVerseNum);
+            if (prevVerse) {
+                openExplanationsDrawer(prevVerse);
+                e.preventDefault();
+            }
+        }
+    } else if (["1", "2", "3", "١", "٢", "٣"].includes(e.key)) {
+        // Change Status: 1/١ -> 0 (Not started), 2/٢ -> 1 (Partial), 3/٣ -> 2 (Memorized)
+        if (currentDrawerVerseNum) {
+            let status;
+            if (e.key === "1" || e.key === "١") status = 0;
+            else if (e.key === "2" || e.key === "٢") status = 1;
+            else if (e.key === "3" || e.key === "٣") status = 2;
+
+            userProgress[currentDrawerVerseNum] = status;
+            saveProgress();
+            updateSRSStateForVerse(currentDrawerVerseNum, status);
+
+            // Update active status button in drawer UI
+            document.querySelectorAll(".status-btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (parseInt(btn.getAttribute("data-status")) === status) {
+                    btn.classList.add("active");
+                }
+            });
+
+            // Update browser list row badge in-place
+            const row = document.querySelector(`.verse-item[data-verse-num="${currentDrawerVerseNum}"]`);
+            if (row) {
+                const badge = row.querySelector(".status-badge");
+                if (badge) {
+                    badge.className = `status-badge status-${status}`;
+                    badge.innerText = status === 2 ? "محفوظ" : status === 1 ? "قيد الحفظ" : "غير محفوظ";
+                }
+            }
+            initDashboard();
+            e.preventDefault();
+        }
+    }
+});
 
 // Focus Mode Initialization
 function initFocusMode() {
@@ -1553,6 +1699,22 @@ function setupSearch() {
                 <span class="badge" style="align-self:center; margin-left:10px;">${m.chapterTitle}</span>
                 <div class="${statusBadgeClass}">${statusBadgeText}</div>
             `;
+
+            const badge = item.querySelector(".status-badge");
+            badge.addEventListener("click", (e) => {
+                e.stopPropagation(); // Prevent opening the explanations drawer
+                const currentStatus = userProgress[v.number] || 0;
+                const nextStatus = (currentStatus + 1) % 3;
+
+                userProgress[v.number] = nextStatus;
+                saveProgress();
+                updateSRSStateForVerse(v.number, nextStatus);
+
+                badge.className = `status-badge status-${nextStatus}`;
+                badge.innerText = nextStatus === 2 ? "محفوظ" : nextStatus === 1 ? "قيد الحفظ" : "غير محفوظ";
+
+                initDashboard(); // Update stats
+            });
 
             item.addEventListener("click", () => {
                 openExplanationsDrawer(v);

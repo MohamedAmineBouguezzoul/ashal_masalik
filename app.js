@@ -863,6 +863,9 @@ function initFocusMode() {
         document.getElementById("focus-ajuz").style.fontSize = `${sz}px`;
     }
 
+    // Set initial size
+    applyFocusFontSize(sizes[activeSizeIdx]);
+
     // Prev / Next actions
     document.getElementById("focus-prev-btn").onclick = () => {
         if (currentFocusVerseIdx > 0) {

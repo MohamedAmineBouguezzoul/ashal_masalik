@@ -14,7 +14,7 @@
     <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Main Style sheet -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=1.1.1">
 </head>
 
 <body class="dark-theme">
@@ -51,10 +51,21 @@
                 </button>
             </nav>
             <div class="sidebar-footer">
-                <button id="theme-toggle" class="footer-action-btn" title="تبديل المظهر">
+                <button id="theme-toggle" class="footer-action-btn" title="تبديل المظهر" style="margin-bottom: 8px;">
                     <i class="fa-solid fa-moon"></i>
                     <span>الوضع الليلي</span>
                 </button>
+                <div style="display: flex; gap: 8px; width: 100%;">
+                    <button id="backup-btn" class="footer-action-btn" title="تصدير نسخة احتياطية من حفظك" style="flex: 1; padding: 8px; font-size: 11px; gap: 4px;">
+                        <i class="fa-solid fa-file-export"></i>
+                        <span>تصدير</span>
+                    </button>
+                    <button id="restore-btn" class="footer-action-btn" title="استيراد نسخة احتياطية من حفظك" style="flex: 1; padding: 8px; font-size: 11px; gap: 4px;">
+                        <i class="fa-solid fa-file-import"></i>
+                        <span>استيراد</span>
+                    </button>
+                </div>
+                <input type="file" id="restore-file-input" style="display: none;" accept=".json">
             </div>
         </aside>
 
@@ -436,12 +447,15 @@
                 <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">1</span>، <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">2</span>، <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">3</span> لتغيير حالة الحفظ | 
                 <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">Esc</span> للإغلاق
             </div>
+            <div class="drawer-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: center; gap: 10px;">
+                <button id="import-progress-btn" class="outline-btn" style="font-size: 12px;">استيراد</button>
+                <button id="export-progress-btn" class="outline-btn" style="font-size: 12px;">تصدير</button>
+            </div>
         </div>
     </aside>
 
     <!-- JS Scripts -->
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <script src="data.js?v=1.1.1"></script>
+    <script src="app.js?v=1.1.1"></script>
 </body>
-
 </html>

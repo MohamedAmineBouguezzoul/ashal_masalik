@@ -36,6 +36,7 @@ function formatCount(num, singular, dual, plural) {
 document.addEventListener("DOMContentLoaded", async () => {
     initTheme();
     setupNavigation();
+    setupBackupRestore();
 
     try {
         if (typeof poem_with_explanations_data !== "undefined") {
@@ -1723,4 +1724,80 @@ function setupSearch() {
             container.appendChild(item);
         });
     });
+}
+
+// Backup & Restore Progress Data
+function setupBackupRestore() {
+    const backupBtn = document.getElementById("backup-btn");
+    const restoreBtn = document.getElementById("restore-btn");
+    const restoreInput = document.getElementById("restore-file-input");
+    
+    const drawerExportBtn = document.getElementById("export-progress-btn");
+    const drawerImportBtn = document.getElementById("import-progress-btn");
+
+    const onBackupClick = () => {
+        exportProgressData();
+    };
+
+    const onRestoreClick = () => {
+        if (restoreInput) restoreInput.click();
+    };
+
+    if (backupBtn) backupBtn.onclick = onBackupClick;
+    if (drawerExportBtn) drawerExportBtn.onclick = onBackupClick;
+
+    if (restoreBtn) restoreBtn.onclick = onRestoreClick;
+    if (drawerImportBtn) drawerImportBtn.onclick = onRestoreClick;
+
+    if (restoreInput) {
+        restoreInput.onchange = (e) => {
+            importProgressData(e);
+        };
+    }
+}
+
+function exportProgressData() {
+    const backupData = {
+        progress: userProgress,
+        srs: userSRS
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    
+    const dateStr = new Date().toISOString().split('T')[0];
+    downloadAnchor.setAttribute("download", `ashal_masalik_backup_${dateStr}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+function importProgressData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data && (data.progress || data.srs)) {
+                if (data.progress) {
+                    userProgress = data.progress;
+                    localStorage.setItem("ashal_masalik_progress", JSON.stringify(userProgress));
+                }
+                if (data.srs) {
+                    userSRS = data.srs;
+                    localStorage.setItem("ashal_masalik_srs", JSON.stringify(userSRS));
+                }
+                
+                alert("تم استيراد بيانات الحفظ والتقدم بنجاح! سيتم إعادة تحميل الصفحة الآن لتطبيق التغييرات.");
+                window.location.reload();
+            } else {
+                alert("الملف غير صالح أو لا يحتوي على بيانات حفظ صحيحة.");
+            }
+        } catch (err) {
+            alert("حدث خطأ أثناء قراءة الملف. يرجى التأكد من اختيار ملف النسخة الاحتياطية الصحيح.");
+        }
+    };
+    reader.readAsText(file);
 }

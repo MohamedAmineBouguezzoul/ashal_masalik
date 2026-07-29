@@ -1,89 +1,433 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حفظ أسهل المسالك</title>
+    <title>مساعد حفظ أسهل المسالك</title>
+    <!-- Google Fonts: Amiri for poem text, Cairo for UI -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Main Style sheet -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
 
-<div class="container">
-    <header>
-        <h1>حفظ أسهل المسالك في مذهب الإمام مالك</h1>
-        <h2>للشيخ: محمد البشار الرشيدي</h2>
-        <p>من البيت 73 إلى 260</p>
-        
-        <div class="stats-container">
-            <div class="stats-info">
-                <span>الإنجاز: <strong id="saved-count">0</strong> من <strong id="total-count">0</strong></span>
-                <strong id="percent-display" style="color: var(--accent-color);">0%</strong>
+<body class="dark-theme">
+    <!-- Overlay/Background Gradients -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-book-open logo-icon"></i>
+                <div class="logo-text">
+                    <h1>أسهل المسالك</h1>
+                    <span>مساعد الحفظ والضبط</span>
+                </div>
             </div>
-            <div class="progress-bar-bg">
-                <div id="progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+            <nav class="sidebar-menu">
+                <button class="menu-btn active" data-target="dashboard-view">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>الرئيسية</span>
+                </button>
+                <button class="menu-btn" data-target="browser-view" id="nav-browser">
+                    <i class="fa-solid fa-book"></i>
+                    <span>تصفح المتن</span>
+                </button>
+                <button class="menu-btn" data-target="focus-view">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    <span>وضع التركيز</span>
+                </button>
+                <button class="menu-btn" data-target="quiz-view">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>وضع الاختبار</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="theme-toggle" class="footer-action-btn" title="تبديل المظهر">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>الوضع الليلي</span>
+                </button>
             </div>
-        </div>
-        <div class="controls">
-    <button onclick="toggleTheme()">🌙</button>
-    <button class="secondary" onclick="hideAllVerses()">🌑 إخفاء كامل</button>
-    
-    <button class="secondary" onclick="hideAllAjuz()">🌓 إخفاء العجز</button>
-    <button class="secondary" onclick="showAll()">🌕 إظهار الكل</button>
-    <button class="focus-btn" onclick="openFocusMode()">🎯 وضع التركيز</button>
-    <button class="secondary" onclick="resetProgress()" style="color: #ffffff;">🗑️ تصفير</button>
-</div>
-    </header>
+        </aside>
 
-    <div id="verses-area">
-        </div>
-</div>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="app-header">
+                <button id="menu-toggle-mobile" class="mobile-only-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="header-search">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="global-search" placeholder="ابحث في الأبيات أو الأبواب الفقهية...">
+                </div>
+                <div class="user-status-pill">
+                    <div class="avatar-circle">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span id="user-progress-percent">0% من الحفظ</span>
+                </div>
+            </header>
 
-<div id="focus-overlay">
-    <button class="close-focus" onclick="closeFocusMode()" title="خروج">✕</button>
-    <div class="focus-card">
-        <div class="focus-id-badge" id="focus-id">00</div>
-        <div class="focus-section-title" id="focus-section">...</div>
-        
-        <div class="focus-verse-text">
-            <div class="shatr" id="focus-s1" onclick="toggleFocusShatr(this)">...</div>
-            <div class="shatr hidden" id="focus-s2" onclick="toggleFocusShatr(this)">...</div>
-        </div>
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view-panel active">
+                <div class="view-header">
+                    <h2>لوحة التحكم والمتابعة</h2>
+                    <p>مرحباً بك في مساعد الحفظ الذكي لمنظومة أسهل المسالك في مذهب الإمام مالك</p>
+                </div>
 
-        <div id="focus-counter-area"></div>
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card progress-circle-card">
+                        <div class="progress-circle-container">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring__circle-bg" stroke="var(--bg-card)" stroke-width="8"
+                                    fill="transparent" r="50" cx="60" cy="60" />
+                                <circle class="progress-ring__circle" id="dashboard-progress-circle"
+                                    stroke="url(#gradient)" stroke-width="8" fill="transparent" r="50" cx="60"
+                                    cy="60" />
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" stop-color="var(--primary)" />
+                                        <stop offset="100%" stop-color="var(--secondary)" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="progress-value" id="dashboard-progress-val">0%</div>
+                        </div>
+                        <div class="stat-details">
+                            <h3>التقدم الإجمالي</h3>
+                            <p><span id="total-memorized-count">0</span> بيت تم حفظها من أصل <span
+                                    class="total-verses-txt">1158</span></p>
+                        </div>
+                    </div>
+                    <div class="stat-card info-card">
+                        <div class="card-icon blue-icon"><i class="fa-solid fa-check-double"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-num" id="stat-fully-memorized">0</span>
+                            <span class="stat-lbl">أبيات محفوظة بالكامل</span>
+                        </div>
+                    </div>
+                    <div class="stat-card info-card">
+                        <div class="card-icon orange-icon"><i class="fa-solid fa-star-half-stroke"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-num" id="stat-partially-memorized">0</span>
+                            <span class="stat-lbl">أبيات قيد الحفظ</span>
+                        </div>
+                    </div>
+                </div>
 
-        <div style="margin-top: 20px;">
-            <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
-                <input type="checkbox" id="focus-check" onchange="toggleDoneFromFocus()">
-                <span>تم الحفظ</span>
-            </label>
-        </div>
+                <!-- Spaced Repetition (Smart Review) Block -->
+                <div class="spaced-repetition-block dashboard-block" id="srs-block">
+                    <h3><i class="fa-solid fa-clock-rotate-left header-icon"></i> المراجعة الذكية (التكرار المتباعد)</h3>
+                    <div class="srs-card" id="srs-card-container">
+                        <div class="loading-placeholder">جاري تحميل جدول المراجعة...</div>
+                    </div>
+                </div>
 
-        <div class="focus-controls">
-            <button class="nav-btn" onclick="prevVerse()">➜ السابق</button>
-            <button class="nav-btn" onclick="nextVerse()">التالي ⬅</button>
-        </div>
-        <p style="font-size: 0.8rem; margin-top: 15px; opacity: 0.6;">(يمكنك استخدام السهم الأعلى لزيادة العداد والأسفل لنقصه، اليمين واليسار للتنقل بين الأبيات و المسافة لكشف العجز وEnter لتسجيل الحفظ)</p>
+                <!-- Quick Study / Resume Study -->
+                <div class="dashboard-rows-grid">
+                    <div class="dashboard-block resume-study-block">
+                        <h3><i class="fa-solid fa-circle-play header-icon"></i> استئناف الحفظ</h3>
+                        <div class="resume-card">
+                            <div class="resume-details">
+                                <h4 id="resume-chapter-title">المقدمة</h4>
+                                <p id="resume-verse-text">الحَمْدُ لِلَّهِ الهذَي قَدْ فَرَضَا ... عَلَى الوَرَى
+                                    تَوْحَيدَهُ وَحَرهضَا</p>
+                                <span id="resume-verse-num" class="badge">البيت 1</span>
+                            </div>
+                            <button id="resume-btn" class="primary-btn">تابع الحفظ <i
+                                    class="fa-solid fa-chevron-left"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-block recent-chapters-block">
+                        <h3><i class="fa-solid fa-list-ol header-icon"></i> الأبواب الفقهية الرئيسية</h3>
+                        <div class="chapters-quick-list" id="dashboard-chapters-list">
+                            <!-- Populated by JavaScript -->
+                            <div class="loading-placeholder">جاري تحميل الأبواب...</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Poem Browser View -->
+            <section id="browser-view" class="view-panel">
+                <div class="browser-layout">
+                    <!-- Chapters Navigation -->
+                    <aside class="chapters-sidebar">
+                        <h3>أبواب المنظومة</h3>
+                        <div class="chapters-list-wrapper" id="browser-chapters-list">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </aside>
+
+                    <!-- Poem Table/List -->
+                    <div class="poem-display-area">
+                        <div class="browser-toolbar">
+                            <div class="toolbar-title-block">
+                                <h2 id="current-browser-chapter">المقدمة</h2>
+                                <span id="chapter-verses-range" class="badge">البيت 1 - 19</span>
+                            </div>
+                            <div class="toolbar-actions">
+                                <button id="btn-toggle-diacritics" class="toolbar-btn" title="إظهار/إخفاء التشكيل">
+                                    <span class="ar-char">أَ</span>
+                                </button>
+                                <div class="vertical-separator"></div>
+                                <button id="btn-mask-sadr" class="toolbar-btn" title="إخفاء الصدر">إخفاء الصدر</button>
+                                <button id="btn-mask-ajuz" class="toolbar-btn" title="إخفاء العجز">إخفاء العجز</button>
+                                <button id="btn-mask-random" class="toolbar-btn" title="إخفاء كلمات عشوائية">إخفاء
+                                    عشوائي</button>
+                                <button id="btn-reveal-all" class="toolbar-btn active" title="إظهار الكل"><i
+                                        class="fa-solid fa-eye"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Verses Container -->
+                        <div class="verses-list" id="verses-container">
+                            <!-- Populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Focus Mode View -->
+            <section id="focus-view" class="view-panel">
+                <div class="focus-layout">
+                    <div class="focus-controls-top">
+                        <div class="chapter-selector-wrapper">
+                            <label for="focus-chapter-select">اختر الباب الفقهي:</label>
+                            <select id="focus-chapter-select" class="form-select">
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                        <div class="font-controls">
+                            <button id="focus-font-dec" class="circle-btn"><i class="fa-solid fa-minus"></i></button>
+                            <span id="focus-font-size-val">36px</span>
+                            <button id="focus-font-inc" class="circle-btn"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Single Verse Focus Card -->
+                    <div class="focus-verse-card">
+                        <div class="focus-verse-wrapper" id="focus-verse-container">
+                            <div class="focus-verse-number" id="focus-verse-num">البيت 1</div>
+                            <div class="focus-verse-line focus-sadr" id="focus-sadr">الحَمْدُ لِلَّهِ الهذَي قَدْ
+                                فَرَضَا</div>
+                            <div class="focus-verse-divider"><span class="divider-diamond"></span></div>
+                            <div class="focus-verse-line focus-ajuz" id="focus-ajuz">عَلَى الوَرَى تَوْحَيدَهُ وَحَرهضَا
+                            </div>
+                        </div>
+
+                        <!-- Toggle options -->
+                        <div class="focus-masks">
+                            <button id="focus-hide-sadr" class="pill-btn">إخفاء الصدر</button>
+                            <button id="focus-hide-ajuz" class="pill-btn">إخفاء العجز</button>
+                            <button id="focus-reveal" class="pill-btn active">إظهار البيت</button>
+                        </div>
+                    </div>
+
+                    <!-- Navigation and Auto-Scroll -->
+                    <div class="focus-navigation">
+                        <button id="focus-prev-btn" class="nav-btn"><i class="fa-solid fa-chevron-right"></i> البيت
+                            السابق</button>
+
+                        <div class="autoplay-control">
+                            <button id="focus-play-btn" class="play-btn"><i class="fa-solid fa-play"></i> التشغيل
+                                التلقائي</button>
+                            <select id="focus-speed-select" class="form-select speed-select">
+                                <option value="4000">4 ثوانٍ</option>
+                                <option value="6000" selected>6 ثوانٍ</option>
+                                <option value="8000">8 ثوانٍ</option>
+                                <option value="10000">10 ثوانٍ</option>
+                            </select>
+                        </div>
+
+                        <button id="focus-next-btn" class="nav-btn">البيت التالي <i
+                                class="fa-solid fa-chevron-left"></i></button>
+                    </div>
+
+                    <!-- Focus explanation -->
+                    <div class="focus-explanation-card">
+                        <h4>شرح البيت والكلمات</h4>
+                        <div id="focus-commentary-text" class="explanation-text">...</div>
+                        <div id="focus-vocab-container" class="vocab-container-grid"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quiz Mode View -->
+            <section id="quiz-view" class="view-panel">
+                <div class="view-header">
+                    <h2>اختبار الحفظ والضبط</h2>
+                    <p>قم باختبار مدى حفظك وجودة ضبطك لأبيات المنظومة من خلال أنواع متعددة من الاختبارات</p>
+                </div>
+
+                <!-- Quiz Configuration Panel -->
+                <div id="quiz-setup" class="quiz-setup-card">
+                    <h3>إعداد الاختبار</h3>
+
+                    <div class="setup-grid">
+                        <div class="form-group">
+                            <label for="quiz-chapter-select">اختر الباب أو النطاق:</label>
+                            <select id="quiz-chapter-select" class="form-select">
+                                <option value="all">المنظومة كاملة</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quiz-type-select">نوع الاختبار:</label>
+                            <select id="quiz-type-select" class="form-select">
+                                <option value="complete-ajuz">أكمل الشطر الثاني (العجز)</option>
+                                <option value="complete-sadr">أكمل الشطر الأول (الصدر)</option>
+                                <option value="match-lines">توصيل الصدر بالعجز</option>
+                                <option value="order-verses">ترتيب أبيات المنظومة</option>
+                                <option value="write-verse">اكتب البيت المفقود</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quiz-question-count">عدد الأسئلة:</label>
+                            <select id="quiz-question-count" class="form-select">
+                                <option value="5">5 أسئلة</option>
+                                <option value="10" selected>10 أسئلة</option>
+                                <option value="15">15 سؤالاً</option>
+                                <option value="20">20 سؤالاً</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="start-quiz-btn" class="primary-btn start-quiz-btn-large">ابدأ الاختبار الآن</button>
+                </div>
+
+                <!-- Active Quiz Screen -->
+                <div id="quiz-active" class="quiz-active-card hidden">
+                    <div class="quiz-header-progress">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="quiz-progress-bar" style="width: 0%;"></div>
+                        </div>
+                        <span id="quiz-progress-text">السؤال 1 من 10</span>
+                    </div>
+
+                    <!-- Question Container -->
+                    <div class="question-container">
+                        <div class="quiz-verse-number" id="quiz-question-num">البيت 24</div>
+                        <h3 class="question-text" id="quiz-question-instruction">أكمل الشطر الثاني للبيت التالي:</h3>
+
+                        <div class="quiz-question-body">
+                            <!-- Complete Sadr / Ajuz template -->
+                            <div class="quiz-verse-blank-box" id="quiz-verse-display">
+                                <span class="part-sadr">لَهُ كَلاَمٌ قُدْرَةٌ سَمْعٌ بَصَرْ</span>
+                                <span class="part-separator">...</span>
+                                <span class="part-ajuz text-blurred">إَرَادَةٌ عَلْمٌ حَيَاةٌ جَا الخَبَرْ</span>
+                            </div>
+
+                            <!-- Options Container -->
+                            <div class="quiz-options-list" id="quiz-options-container">
+                                <!-- Populated by JS -->
+                            </div>
+
+                            <!-- Typing Container (for write-verse mode) -->
+                            <div class="quiz-typing-container hidden" id="quiz-typing-container">
+                                <input type="text" id="quiz-typing-input"
+                                    placeholder="اكتب الشطر المفقود هنا بشكل صحيح..." autocomplete="off">
+                                <p class="typing-help-text">نصيحة: يمكنك الكتابة بدون حركات وتشكيل.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-footer-actions">
+                        <button id="quiz-skip-btn" class="outline-btn">تخطي السؤال</button>
+                        <button id="quiz-submit-btn" class="primary-btn">تحقق من الإجابة</button>
+                    </div>
+                </div>
+
+                <!-- Quiz Results Screen -->
+                <div id="quiz-results" class="quiz-results-card hidden">
+                    <div class="result-badge-container">
+                        <i class="fa-solid fa-award award-icon"></i>
+                        <h3 id="result-score-percent">80%</h3>
+                        <p id="result-score-fraction">لقد أجبت بشكل صحيح على 8 من أصل 10 أسئلة</p>
+                    </div>
+
+                    <div class="results-feedback-message">
+                        <h4 id="result-title">عمل رائع!</h4>
+                        <p id="result-body-text">لقد قطعت شوطاً كبيراً في ضبط هذا الباب الفقهي. استمر في المراجعة للوصول
+                            إلى الحفظ التام.</p>
+                    </div>
+
+                    <div class="results-actions">
+                        <button id="quiz-retry-btn" class="primary-btn">إعادة الاختبار</button>
+                        <button id="quiz-back-setup-btn" class="outline-btn">العودة للإعداد</button>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
-</div>
 
-<script src="data.js"></script>
-<script src="script.js"></script>
+    <!-- Right Side Explanations Drawer (Responsive Drawer) -->
+    <div class="drawer-overlay" id="explanations-drawer-overlay"></div>
+    <aside class="explanations-drawer" id="explanations-drawer">
+        <div class="drawer-header">
+            <h3>تفاصيل البيت والتعليق</h3>
+            <button id="close-drawer-btn" class="circle-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="drawer-body">
+            <!-- Selected Verse Card -->
+            <div class="drawer-verse-card">
+                <div class="drawer-verse-num" id="drawer-verse-num">البيت 1</div>
+                <div class="drawer-verse-sadr" id="drawer-verse-sadr">الحَمْدُ لِلَّهِ الهذَي قَدْ فَرَضَا</div>
+                <div class="drawer-verse-ajuz" id="drawer-verse-ajuz">عَلَى الوَرَى تَوْحَيدَهُ وَحَرهضَا</div>
+            </div>
 
+            <!-- Memorization Action State -->
+            <div class="drawer-memorize-status">
+                <label>حالة حفظ هذا البيت:</label>
+                <div class="status-buttons-pill">
+                    <button class="status-btn" data-status="0" id="btn-status-0">لم أبدأ</button>
+                    <button class="status-btn" data-status="1" id="btn-status-1">حفظ جزئي</button>
+                    <button class="status-btn" data-status="2" id="btn-status-2">تم الحفظ</button>
+                </div>
+            </div>
+
+            <!-- Verse Explanation / Commentary -->
+            <div class="drawer-section">
+                <h4><i class="fa-solid fa-circle-info section-icon"></i> شرح معاني البيت الفقهية</h4>
+                <div class="commentary-box" id="drawer-commentary-text">
+                    جاري التحميل...
+                </div>
+            </div>
+
+            <!-- Vocabulary definitions -->
+            <div class="drawer-section">
+                <h4><i class="fa-solid fa-language section-icon"></i> شرح الكلمات الغريبة والروابط الذهنية</h4>
+                <div class="vocab-list" id="drawer-vocab-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Visual Mnemonics -->
+            <div class="drawer-section">
+                <h4><i class="fa-solid fa-lightbulb section-icon"></i> روابط ذهنية ومساعدات الذاكرة (Mnemotechnics)</h4>
+                <div class="mnemonic-box" id="drawer-mnemonic-text">
+                    <!-- Automatically generated mnemonic hint -->
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- JS Scripts -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
 </body>
-<footer class="dua-footer">
-    <div class="dua-content">
-        <span class="ornament">﴿</span>
-        <p>رَبِّ زِدْنِي عِلْمًا وَأَلْحِقْنِي بِالصَّالِحِينَ</p>
-        <span class="ornament">﴾</span>
-    </div>
 
-    <div class="author-request">
-        <p class="waqf-text">هذا العمل وقفٌ لوجه الله تعالى</p>
-        <p>إخواني الكرام، إذا انتفعتم بهذا الجهد فلا تنسوا أخاكم وأهله ووالديه من صالح دعائكم بظهر الغيب.</p>
-    </div>
-</footer>
 </html>

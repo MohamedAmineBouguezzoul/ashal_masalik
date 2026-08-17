@@ -64,31 +64,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Theme Management
 function initTheme() {
     const themeToggle = document.getElementById("theme-toggle");
+    const themeToggleMobile = document.getElementById("theme-toggle-mobile");
     const savedTheme = localStorage.getItem("theme") || "dark";
 
-    if (savedTheme === "light") {
+    const setLightTheme = () => {
         document.body.classList.remove("dark-theme");
         document.body.classList.add("light-theme");
-        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i><span>الوضع النهاري</span>';
-    } else {
+        const html = '<i class="fa-solid fa-sun"></i><span>الوضع النهاري</span>';
+        if (themeToggle) themeToggle.innerHTML = html;
+        if (themeToggleMobile) themeToggleMobile.innerHTML = html;
+        localStorage.setItem("theme", "light");
+    };
+
+    const setDarkTheme = () => {
         document.body.classList.remove("light-theme");
         document.body.classList.add("dark-theme");
-        themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i><span>الوضع الليلي</span>';
+        const html = '<i class="fa-solid fa-moon"></i><span>الوضع الليلي</span>';
+        if (themeToggle) themeToggle.innerHTML = html;
+        if (themeToggleMobile) themeToggleMobile.innerHTML = html;
+        localStorage.setItem("theme", "dark");
+    };
+
+    if (savedTheme === "light") {
+        setLightTheme();
+    } else {
+        setDarkTheme();
     }
 
-    themeToggle.addEventListener("click", () => {
+    const onThemeClick = () => {
         if (document.body.classList.contains("dark-theme")) {
-            document.body.classList.remove("dark-theme");
-            document.body.classList.add("light-theme");
-            themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i><span>الوضع النهاري</span>';
-            localStorage.setItem("theme", "light");
+            setLightTheme();
         } else {
-            document.body.classList.remove("light-theme");
-            document.body.classList.add("dark-theme");
-            themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i><span>الوضع الليلي</span>';
-            localStorage.setItem("theme", "dark");
+            setDarkTheme();
         }
-    });
+    };
+
+    if (themeToggle) themeToggle.addEventListener("click", onThemeClick);
+    if (themeToggleMobile) themeToggleMobile.addEventListener("click", onThemeClick);
 }
 
 // Navigation Logic
@@ -96,10 +108,17 @@ function setupNavigation() {
     const menuButtons = document.querySelectorAll(".menu-btn");
     menuButtons.forEach(btn => {
         btn.addEventListener("click", () => {
-            menuButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-
             const target = btn.getAttribute("data-target");
+            if (!target) return; // Skip buttons without a target
+
+            menuButtons.forEach(b => {
+                if (b.getAttribute("data-target") === target) {
+                    b.classList.add("active");
+                } else {
+                    b.classList.remove("active");
+                }
+            });
+
             switchView(target);
         });
     });
@@ -128,6 +147,41 @@ function setupNavigation() {
     // Also close sidebar on menu item clicks on mobile/tablet
     document.querySelectorAll(".menu-btn").forEach(btn => {
         btn.addEventListener("click", closeSidebar);
+    });
+
+    // Mobile settings sheet toggle
+    const mobileSettingsToggle = document.getElementById("mobile-settings-toggle");
+    const settingsSheet = document.getElementById("settings-sheet");
+    const settingsSheetOverlay = document.getElementById("settings-sheet-overlay");
+    const closeSettingsSheetBtn = document.getElementById("close-settings-sheet-btn");
+
+    const openSettings = () => {
+        if (settingsSheet) settingsSheet.classList.add("active");
+        if (settingsSheetOverlay) settingsSheetOverlay.classList.add("active");
+        if (mobileSettingsToggle) mobileSettingsToggle.classList.add("active");
+    };
+
+    const closeSettings = () => {
+        if (settingsSheet) settingsSheet.classList.remove("active");
+        if (settingsSheetOverlay) settingsSheetOverlay.classList.remove("active");
+        if (mobileSettingsToggle) mobileSettingsToggle.classList.remove("active");
+    };
+
+    if (mobileSettingsToggle) {
+        mobileSettingsToggle.addEventListener("click", openSettings);
+    }
+
+    if (closeSettingsSheetBtn) {
+        closeSettingsSheetBtn.addEventListener("click", closeSettings);
+    }
+
+    if (settingsSheetOverlay) {
+        settingsSheetOverlay.addEventListener("click", closeSettings);
+    }
+
+    // When clicking any main navigation tab, close settings sheet if open
+    menuButtons.forEach(btn => {
+        btn.addEventListener("click", closeSettings);
     });
 }
 
@@ -1746,7 +1800,9 @@ function setupSearch() {
 // Backup & Restore Progress Data
 function setupBackupRestore() {
     const backupBtn = document.getElementById("backup-btn");
+    const backupBtnMobile = document.getElementById("backup-btn-mobile");
     const restoreBtn = document.getElementById("restore-btn");
+    const restoreBtnMobile = document.getElementById("restore-btn-mobile");
     const restoreInput = document.getElementById("restore-file-input");
     
     const drawerExportBtn = document.getElementById("export-progress-btn");
@@ -1761,9 +1817,11 @@ function setupBackupRestore() {
     };
 
     if (backupBtn) backupBtn.onclick = onBackupClick;
+    if (backupBtnMobile) backupBtnMobile.onclick = onBackupClick;
     if (drawerExportBtn) drawerExportBtn.onclick = onBackupClick;
 
     if (restoreBtn) restoreBtn.onclick = onRestoreClick;
+    if (restoreBtnMobile) restoreBtnMobile.onclick = onRestoreClick;
     if (drawerImportBtn) drawerImportBtn.onclick = onRestoreClick;
 
     if (restoreInput) {

@@ -59,11 +59,13 @@
                     <span>الوضع الليلي</span>
                 </button>
                 <div style="display: flex; gap: 8px; width: 100%;">
-                    <button id="backup-btn" class="footer-action-btn" title="تصدير نسخة احتياطية من حفظك" style="flex: 1; padding: 8px; font-size: 11px; gap: 4px;">
+                    <button id="backup-btn" class="footer-action-btn" title="تصدير نسخة احتياطية من حفظك"
+                        style="flex: 1; padding: 8px; font-size: 11px; gap: 4px;">
                         <i class="fa-solid fa-file-export"></i>
                         <span>تصدير</span>
                     </button>
-                    <button id="restore-btn" class="footer-action-btn" title="استيراد نسخة احتياطية من حفظك" style="flex: 1; padding: 8px; font-size: 11px; gap: 4px;">
+                    <button id="restore-btn" class="footer-action-btn" title="استيراد نسخة احتياطية من حفظك"
+                        style="flex: 1; padding: 8px; font-size: 11px; gap: 4px;">
                         <i class="fa-solid fa-file-import"></i>
                         <span>استيراد</span>
                     </button>
@@ -394,9 +396,12 @@
     <aside class="explanations-drawer" id="explanations-drawer">
         <div class="drawer-header">
             <h3>تفاصيل البيت والتعليق</h3>
-            <div class="drawer-nav-buttons" style="display: flex; gap: 8px; margin-inline-start: auto; margin-inline-end: 15px;">
-                <button id="drawer-prev-btn" class="circle-btn" title="البيت السابق"><i class="fa-solid fa-chevron-right"></i></button>
-                <button id="drawer-next-btn" class="circle-btn" title="البيت التالي"><i class="fa-solid fa-chevron-left"></i></button>
+            <div class="drawer-nav-buttons"
+                style="display: flex; gap: 8px; margin-inline-start: auto; margin-inline-end: 15px;">
+                <button id="drawer-prev-btn" class="circle-btn" title="البيت السابق"><i
+                        class="fa-solid fa-chevron-right"></i></button>
+                <button id="drawer-next-btn" class="circle-btn" title="البيت التالي"><i
+                        class="fa-solid fa-chevron-left"></i></button>
             </div>
             <button id="close-drawer-btn" class="circle-btn"><i class="fa-solid fa-xmark"></i></button>
         </div>
@@ -443,22 +448,87 @@
             </div>
 
             <!-- Keyboard Shortcuts Hint -->
-            <div class="drawer-shortcuts-hint" style="margin-top: 10px; padding: 12px; background-color: var(--bg-input); border: 1px dashed var(--border-color); border-radius: var(--radius-md); font-size: 12px; color: var(--text-secondary); text-align: center;">
+            <div class="drawer-shortcuts-hint"
+                style="margin-top: 10px; padding: 12px; background-color: var(--bg-input); border: 1px dashed var(--border-color); border-radius: var(--radius-md); font-size: 12px; color: var(--text-secondary); text-align: center;">
                 <i class="fa-solid fa-keyboard" style="margin-left: 6px; color: var(--primary);"></i>
                 اختصارات لوحة المفاتيح:
-                <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">➡️</span> / <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">⬅️</span> للتنقل | 
-                <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">1</span>، <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">2</span>، <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">3</span> لتغيير حالة الحفظ | 
-                <span style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">Esc</span> للإغلاق
+                <span
+                    style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">➡️</span>
+                / <span
+                    style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">⬅️</span>
+                للتنقل |
+                <span
+                    style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">1</span>،
+                <span
+                    style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">2</span>،
+                <span
+                    style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">3</span>
+                لتغيير حالة الحفظ |
+                <span
+                    style="background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; margin: 0 4px; color: var(--text-primary);">Esc</span>
+                للإغلاق
             </div>
-            <div class="drawer-footer" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: center; gap: 10px;">
+            <div class="drawer-footer"
+                style="margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; justify-content: center; gap: 10px;">
                 <button id="import-progress-btn" class="outline-btn" style="font-size: 12px;">استيراد</button>
                 <button id="export-progress-btn" class="outline-btn" style="font-size: 12px;">تصدير</button>
             </div>
         </div>
     </aside>
 
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="bottom-nav-bar">
+        <button class="bottom-nav-btn menu-btn active" data-target="dashboard-view">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>الرئيسية</span>
+        </button>
+        <button class="bottom-nav-btn menu-btn" data-target="browser-view">
+            <i class="fa-solid fa-book"></i>
+            <span>تصفح</span>
+        </button>
+        <button class="bottom-nav-btn menu-btn" data-target="focus-view">
+            <i class="fa-solid fa-eye-slash"></i>
+            <span>التركيز</span>
+        </button>
+        <button class="bottom-nav-btn menu-btn" data-target="quiz-view">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>الاختبار</span>
+        </button>
+        <button class="bottom-nav-btn" id="mobile-settings-toggle">
+            <i class="fa-solid fa-gear"></i>
+            <span>الإعدادات</span>
+        </button>
+    </nav>
+
+    <!-- Mobile Settings Bottom Sheet -->
+    <div class="settings-sheet-overlay" id="settings-sheet-overlay"></div>
+    <div class="settings-sheet" id="settings-sheet">
+        <div class="settings-sheet-header">
+            <h3>الإعدادات والمظهر</h3>
+            <button id="close-settings-sheet-btn" class="circle-btn" title="إغلاق"><i
+                    class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="settings-sheet-body">
+            <button id="theme-toggle-mobile" class="settings-action-btn">
+                <i class="fa-solid fa-moon"></i>
+                <span>الوضع الليلي</span>
+            </button>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button id="backup-btn-mobile" class="settings-action-btn" style="flex: 1;">
+                    <i class="fa-solid fa-file-export"></i>
+                    <span>تصدير الحفظ</span>
+                </button>
+                <button id="restore-btn-mobile" class="settings-action-btn" style="flex: 1;">
+                    <i class="fa-solid fa-file-import"></i>
+                    <span>استيراد الحفظ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- JS Scripts -->
     <script src="data.js?v=1.1.3"></script>
     <script src="app.js?v=1.1.3"></script>
 </body>
+
 </html>

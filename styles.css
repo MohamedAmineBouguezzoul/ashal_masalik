@@ -1812,6 +1812,25 @@ body.light-theme .bg-glow {
 }
 
 @media (max-width: 768px) {
+    /* Prevent bottom navigation bar from covering content */
+    #dashboard-view,
+    #focus-view,
+    #quiz-view,
+    .verses-list {
+        padding-bottom: 80px !important;
+    }
+
+    /* Explanations drawer positioning and safe area on mobile */
+    .explanations-drawer {
+        z-index: 1005 !important;
+    }
+    .drawer-overlay {
+        z-index: 1004 !important;
+    }
+    .drawer-body {
+        padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+
     .app-header {
         display: flex;
         justify-content: space-between;
